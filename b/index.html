@@ -24,11 +24,11 @@
   })();
 </script>
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap"></noscript>
-<link rel="preload" as="image" type="image/webp" imagesrcset="/starlaban/posters/b-hero-ipad-480.webp 480w, /starlaban/posters/b-hero-ipad-720.webp 720w" imagesizes="(max-width: 760px) 92vw, 52vh" fetchpriority="high">
-  <script type="module" crossorigin src="/starlaban/assets/b-C3y4ezI8.js"></script>
+<link rel="preload" as="image" type="image/webp" imagesrcset="/starlaban/posters/b-hero-ipad-480.webp 480w, /starlaban/posters/b-hero-ipad-720.webp 720w" imagesizes="(max-width: 760px) 100vw, 52vw" fetchpriority="high">
+  <script type="module" crossorigin src="/starlaban/assets/b-edbTJcK6.js"></script>
   <link rel="modulepreload" crossorigin href="/starlaban/assets/perf-_QPaBiv0.js">
   <link rel="modulepreload" crossorigin href="/starlaban/assets/motion-CUhcBZFa.js">
-  <link rel="stylesheet" crossorigin href="/starlaban/assets/b-D4rcVQ6z.css">
+  <link rel="stylesheet" crossorigin href="/starlaban/assets/b-D_2d8-Vp.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -76,9 +76,9 @@
         </dl>
       </div>
       <figure class="reel" aria-label="Video: inside the shop">
-        <div class="reel-tilt ipad">
+        <div class="reel-tilt">
           <picture class="reel-poster">
-            <source type="image/webp" srcset="/starlaban/posters/b-hero-ipad-480.webp 480w, /starlaban/posters/b-hero-ipad-720.webp 720w" sizes="(max-width: 760px) 92vw, 52vh">
+            <source type="image/webp" srcset="/starlaban/posters/b-hero-ipad-480.webp 480w, /starlaban/posters/b-hero-ipad-720.webp 720w" sizes="(max-width: 760px) 100vw, 52vw">
             <img src="/starlaban/posters/b-hero-ipad-480.jpg" alt="" width="480" height="640" fetchpriority="high">
           </picture>
           <video class="reel-video" muted loop playsinline preload="none" aria-hidden="true">
@@ -99,9 +99,12 @@
   <!-- ============ SCROLL STORY ============ -->
   <section class="story" id="story" aria-labelledby="story-title">
     <div class="story-pin">
-      <canvas class="story-ambient" width="36" height="64" aria-hidden="true"></canvas>
-      <div class="story-grid">
-        <div class="story-copy">
+      <div class="story-stage" aria-hidden="true">
+        <div class="story-stills"></div>
+        <canvas class="story-gl"></canvas>
+        <span class="story-shade"></span>
+      </div>
+      <div class="story-copy">
           <p class="eyebrow"><span class="dot" aria-hidden="true"></span>Walk through the shop</p>
           <h2 id="story-title" class="sr-only">A walk through Starlaban Coffee</h2>
           <ol class="steps">
@@ -140,16 +143,6 @@
             <span class="story-count"><b>01</b> / 05</span>
             <span class="story-rail"><i></i></span>
           </div>
-        </div>
-        <div class="story-stage" aria-hidden="true">
-          <div class="story-frame ipad">
-            <canvas class="story-fill" width="36" height="64"></canvas>
-            <div class="story-stills"></div>
-            <video class="story-video" muted playsinline preload="none" disablepictureinpicture></video>
-            <span class="story-glare"></span>
-          </div>
-          <span class="story-chip"><b>01</b><span>The front door</span></span>
-        </div>
       </div>
     </div>
   </section>
