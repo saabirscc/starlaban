@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Starlaban Coffee · Home of donuts</title>
+<meta name="description" content="Starlaban Coffee in Mogadishu. Fresh donuts, hot and iced coffee. Order on WhatsApp or call 808338.">
+<meta name="theme-color" content="#f7dfc5">
+<link rel="icon" href="/starlaban/brand/logo.jpg">
+<!-- hero poster first: it is the first thing painted, before any JS or 3D -->
+<link rel="preload" as="image" type="image/webp" href="/starlaban/posters/c-hero-800.webp" imagesrcset="/starlaban/posters/c-hero-800.webp 800w, /starlaban/posters/c-hero-1600.webp 1600w" imagesizes="(max-width: 760px) 66vw, 66vh" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- fonts never block paint: swap in when ready, size-matched fallbacks meanwhile -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap"></noscript>
+<!-- all CSS inline (about 4.5 kB gzipped): the first paint needs no second round trip -->
+<style>
+/* Starlaban · Site C · Bold & loud */
+/* Size-matched fallbacks so text doesn't jump when the web fonts swap in. */
+@font-face { font-family: "Bricolage Fallback"; src: local("Arial Black"), local("Arial Bold"), local("Arial"); size-adjust: 92%; ascent-override: 95%; descent-override: 26%; line-gap-override: 0%; }
+@font-face { font-family: "Hanken Fallback"; src: local("Segoe UI"), local("Arial"); size-adjust: 98%; ascent-override: 98%; descent-override: 26%; line-gap-override: 0%; }
+:root {
+  --espresso: #3a2419;
+  --crema: #f7dfc5;
+  --caramel: #c99667;
+  --latte: #c4a684;
+  --terracotta: #d59872;
+  --steel: #1b1512;
+  --ink: var(--espresso);
+  --display: "Bricolage Grotesque", "Bricolage Fallback", "Arial Black", system-ui, sans-serif;
+  --ui: "Hanken Grotesk", "Hanken Fallback", "Segoe UI", system-ui, sans-serif;
+  --gut: clamp(16px, 4vw, 48px);
+  --hard: 4px 4px 0 var(--espresso);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+/* lenis (inlined so it isn't a separate render-blocking stylesheet) */
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+body {
+  margin: 0; background: var(--crema); color: var(--espresso);
+  font: 400 16px/1.55 var(--ui); overflow-x: clip;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--espresso); outline-offset: 3px; border-radius: 8px; }
+section[tabindex="-1"]:focus, body:focus { outline: none; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: fixed; left: 12px; top: -60px; z-index: 100; background: var(--espresso); color: var(--crema); padding: 10px 16px; border-radius: 999px; font-weight: 700; text-decoration: none; transition: top .2s; }
+.skip:focus { top: 12px; }
+.wrap { width: min(1200px, 100%); margin: 0 auto; padding: 0 var(--gut); }
+
+/* ---------- buttons ---------- */
+.cta, .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 2.5px solid var(--espresso); background: var(--caramel); color: var(--espresso);
+  font: 800 .98rem/1 var(--display); letter-spacing: -.01em; text-decoration: none;
+  padding: 13px 22px; border-radius: 999px; box-shadow: var(--hard); cursor: pointer;
+  transition: transform .15s, box-shadow .15s, background .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.cta:hover, .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--espresso); }
+.cta:active, .btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--espresso); }
+.btn { background: var(--crema); }
+.btn--wa { background: var(--caramel); }
+.btn--dark { background: var(--espresso); color: var(--crema); box-shadow: 4px 4px 0 var(--caramel); }
+.btn--dark:hover { box-shadow: 2px 2px 0 var(--caramel); }
+.btn--dark:active { box-shadow: 0 0 0 var(--caramel); }
+.btn small { font: 600 .78rem var(--ui); opacity: .8; }
+
+/* ---------- nav ---------- */
+.nav {
+  position: fixed; inset: 0 0 auto; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px var(--gut); pointer-events: none;
+}
+.nav > * { pointer-events: auto; }
+.brand {
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--espresso);
+  font: 800 1.3rem/1 var(--display); letter-spacing: -.03em;
+  background: var(--crema); border: 2.5px solid var(--espresso); border-radius: 999px; padding: 5px 16px 5px 5px; box-shadow: var(--hard);
+}
+.brand svg { width: 36px; height: 36px; animation: turn 14s linear infinite; }
+@keyframes turn { to { transform: rotate(360deg); } }
+.navlinks { display: flex; gap: 6px; padding: 6px; border-radius: 999px; background: var(--espresso); box-shadow: 0 0 0 2px var(--crema); }
+.navlinks a:not(.cta) {
+  color: var(--crema); text-decoration: none; font: 600 .95rem var(--display);
+  padding: 10px 18px; border-radius: 999px; transition: background .2s, color .2s;
+}
+.navlinks a:not(.cta):hover, .navlinks a.on { background: var(--crema); color: var(--espresso); }
+.navlinks a:focus-visible { outline-color: var(--caramel); }
+.cta--panel { display: none; }
+.burger {
+  display: none; width: 50px; height: 50px; border-radius: 50%; border: 2.5px solid var(--espresso);
+  background: var(--crema); box-shadow: var(--hard); place-items: center; cursor: pointer; color: var(--espresso); padding: 0;
+}
+.burger i { display: block; width: 20px; height: 2.5px; background: currentColor; border-radius: 2px; box-shadow: 0 -6px currentColor, 0 6px currentColor; transition: transform .25s, box-shadow .25s; }
+.nav.open .burger i { transform: rotate(45deg); box-shadow: 0 0 currentColor, 0 0 currentColor; }
+.nav.open .burger i::after { content: ""; display: block; width: 20px; height: 2.5px; background: currentColor; border-radius: 2px; transform: rotate(-90deg); }
+
+/* ---------- hero ---------- */
+.hero { position: relative; height: 100svh; min-height: 560px; overflow: hidden; isolation: isolate; touch-action: pan-y; cursor: grab; }
+.hero:active { cursor: grabbing; }
+.gl-host { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.gl-host canvas { display: block; width: 100%; height: 100%; transition: opacity .45s ease; }
+
+/* Hero poster / clip: same size and place as the live donut (52% of the shorter side, the
+   image is 80% donut), so the live canvas fades in over it without a jump. */
+.hero-media {
+  --hs: min(100vw, max(100svh, 560px));
+  position: absolute; z-index: 1; left: 50%; top: 56%; width: calc(var(--hs) * .65); aspect-ratio: 1;
+  transform: translate(-50%, -50%); pointer-events: none;
+}
+.hero-media picture, .hero-media img, .hero-media video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero-media video {
+  opacity: 0; transition: opacity .4s ease;
+  -webkit-mask-image: radial-gradient(closest-side, #000 82%, transparent 100%); mask-image: radial-gradient(closest-side, #000 82%, transparent 100%);
+}
+.hero-media video.on { opacity: 1; }
+.tap3d {
+  position: absolute; z-index: 3; left: 50%; top: calc(56% + var(--hs, 60vh) * .3); transform: translateX(-50%);
+  border: 2.5px solid var(--espresso); background: var(--crema); color: var(--espresso); border-radius: 999px; padding: 8px 16px;
+  font: 800 .85rem var(--display); box-shadow: 3px 3px 0 var(--espresso); cursor: pointer;
+}
+
+/* Showcase posters / clips: one box, 16:10 media centred in it, crossfaded by scroll. */
+.show-media { position: absolute; z-index: 1; left: 30%; right: 1%; top: 13%; bottom: 9%; pointer-events: none; transition: opacity .45s ease; }
+.show-pin.live .show-media { opacity: 0; }
+.sm { position: absolute; inset: 0; opacity: 0; transition: opacity .35s ease; container-type: size; }
+.sm.on { opacity: 1; }
+.sm picture, .sm img { position: absolute; inset: 0; width: 100%; height: 100%; -o-object-fit: contain; object-fit: contain; display: block; }
+.sm video {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(100cqw, 160cqh); aspect-ratio: 16 / 10; height: auto; -o-object-fit: contain; object-fit: contain; opacity: 0; transition: opacity .3s ease;
+  -webkit-mask-image: radial-gradient(closest-side, #000 80%, transparent 100%); mask-image: radial-gradient(closest-side, #000 80%, transparent 100%);
+}
+.sm video.on { opacity: 1; }
+.big {
+  position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-48%); z-index: 0; margin: 0;
+  font: 800 clamp(4.6rem, 17vw, 15.5rem)/.8 var(--display); letter-spacing: -.06em; text-transform: uppercase;
+  text-align: center; white-space: nowrap; color: var(--espresso);
+}
+.big span { display: block; }
+.big .l2 { color: var(--crema); -webkit-text-stroke: 5px var(--espresso); paint-order: stroke fill; }
+.drag-hint {
+  position: absolute; z-index: 2; right: var(--gut); top: 50%; transform: translateY(-50%) rotate(90deg); transform-origin: right center;
+  margin: 0; font: 700 .78rem var(--display); text-transform: uppercase; letter-spacing: .12em; opacity: .7;
+}
+.foot {
+  position: absolute; z-index: 2; left: var(--gut); right: var(--gut); bottom: 26px;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 14px;
+}
+.foot p { margin: 0; max-width: 30ch; font: 700 1.08rem/1.35 var(--display); }
+.ticker { overflow: hidden; border-radius: 999px; background: var(--espresso); color: var(--crema); max-width: 520px; flex: 1 1 260px; }
+.ticker-track { display: flex; gap: 28px; width: -moz-max-content; width: max-content; padding: 11px 0; font: 700 .86rem var(--display); text-transform: uppercase; letter-spacing: .04em; animation: tick 30s linear infinite; }
+.ticker-track span { white-space: nowrap; }
+.ticker-track span::before { content: "★"; color: var(--caramel); margin-right: 28px; }
+@keyframes tick { to { transform: translateX(-50%); } }
+
+/* ---------- showcase ---------- */
+.showcase { position: relative; }
+.show-pin {
+  --bg: var(--crema); --fg: var(--espresso);
+  position: relative; height: 100svh; min-height: 560px; overflow: hidden; isolation: isolate;
+  background: var(--bg); color: var(--fg); transition: background-color .6s ease, color .6s ease;
+}
+.show-name {
+  position: absolute; z-index: 0; left: var(--gut); top: clamp(84px, 13vh, 130px);
+  font: 800 clamp(3.4rem, 11vw, 10.5rem)/.82 var(--display); letter-spacing: -.055em; text-transform: uppercase;
+  display: grid; pointer-events: none;
+}
+.show-name span { display: block; white-space: nowrap; will-change: transform; }
+.show-l2 { color: var(--bg); -webkit-text-stroke: 5px var(--fg); paint-order: stroke fill; transition: color .6s ease; }
+.show-card {
+  position: absolute; z-index: 2; left: var(--gut); bottom: clamp(24px, 6vh, 56px); max-width: 380px;
+  background: var(--crema); color: var(--espresso); border: 2.5px solid var(--espresso); border-radius: 22px;
+  padding: 18px 20px 20px; box-shadow: 6px 6px 0 var(--espresso);
+}
+.show-pin[data-dark] .show-card { box-shadow: 6px 6px 0 var(--caramel); }
+.show-card p { margin: 0; }
+.show-kicker { font: 700 .74rem var(--display); letter-spacing: .1em; text-transform: uppercase; opacity: .7; }
+.show-title { font: 800 1.6rem/1.05 var(--display); letter-spacing: -.03em; margin-top: 6px !important; }
+.show-desc { margin-top: 6px !important; font-size: 1rem; line-height: 1.45; }
+.pair { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px !important; font: 700 1rem var(--display); }
+.pair-tag {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 2px solid var(--espresso);
+  font: 800 .8rem var(--display); text-transform: uppercase; letter-spacing: .06em;
+}
+.pair-tag[data-temp="Hot"] { background: var(--espresso); color: var(--crema); }
+.pair-tag[data-temp="Iced"] { background: #dff1f6; color: var(--espresso); }
+.pair-tag::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.pair-tag[data-temp="Hot"]::before { background: #e8823f; }
+.pair-tag[data-temp="Iced"]::before { background: #5bb6d6; }
+.pair-drink::before { content: "+ "; opacity: .6; }
+.show-dots { position: absolute; z-index: 2; right: var(--gut); bottom: clamp(24px, 6vh, 56px); display: flex; gap: 8px; }
+.show-dots button {
+  position: relative; width: 46px; height: 46px; border-radius: 50%; border: 2.5px solid var(--espresso); background: var(--crema);
+  cursor: pointer; padding: 0; overflow: hidden; box-shadow: 3px 3px 0 var(--espresso); transition: transform .15s, box-shadow .15s;
+}
+.show-pin[data-dark] .show-dots button { box-shadow: 3px 3px 0 var(--caramel); }
+.show-dots button:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--espresso); }
+.show-dots button i { position: absolute; inset: 9px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 5px rgba(0,0,0,.06); }
+.show-dots button i::after { content: ""; position: absolute; inset: 35%; border-radius: 50%; background: var(--crema); }
+.show-dots button[aria-current="true"] { background: var(--espresso); }
+.show-dots button[aria-current="true"] i::after { background: var(--espresso); }
+.show-scroll { position: absolute; z-index: 2; left: 50%; bottom: 14px; transform: translateX(-50%); margin: 0; font: 700 .72rem var(--display); letter-spacing: .14em; text-transform: uppercase; opacity: .6; transition: opacity .4s; }
+.show-scroll span { display: inline-block; animation: bob 1.4s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(3px); } }
+.show-list { display: none; }
+
+/* posters/clips tiers: no live 3D, so no dragging */
+[data-tier="video"] .hero, [data-tier="still"] .hero { cursor: default; }
+[data-tier="video"] .drag-hint, [data-tier="still"] .drag-hint { display: none; }
+.show-list li { border: 2.5px solid var(--espresso); border-radius: 22px; padding: 20px; background: var(--crema); box-shadow: var(--hard); }
+.show-list .sw { width: 72px; height: 72px; border-radius: 50%; border: 2.5px solid var(--espresso); background: radial-gradient(circle, var(--crema) 0 22%, var(--sw) 23% 64%, #b8692c 65%); margin-bottom: 12px; }
+.show-list h3 { margin: 0; font: 800 1.4rem/1.1 var(--display); }
+.show-list p { margin: 6px 0 0; }
+
+/* ---------- section heads ---------- */
+.eyebrow { margin: 0 0 6px; font: 800 .8rem var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--espresso); opacity: .7; }
+.sec-head h2, .visit h2 { margin: 0; font: 800 clamp(3rem, 9vw, 7.5rem)/.85 var(--display); letter-spacing: -.055em; text-transform: uppercase; }
+
+/* ---------- menu ---------- */
+.menu { padding: clamp(80px, 12vw, 140px) 0 clamp(70px, 10vw, 120px); background: var(--crema); }
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.4vw, 28px); margin-top: clamp(28px, 4vw, 48px); }
+.card {
+  --tone: var(--caramel);
+  position: relative; border: 2.5px solid var(--espresso); border-radius: 26px; background: var(--tone);
+  padding: 22px 22px 26px; box-shadow: 6px 6px 0 var(--espresso);
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+}
+.card:hover { transform: translate(-3px, -6px) rotate(-.6deg); box-shadow: 10px 12px 0 var(--espresso); }
+.card:nth-child(2) { --tone: var(--terracotta); }
+.card:nth-child(3) { --tone: var(--latte); }
+.card h3 { margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font: 800 clamp(2rem, 3.6vw, 2.8rem)/1 var(--display); letter-spacing: -.04em; text-transform: uppercase; }
+.card h3 small { font: 800 .8rem var(--display); letter-spacing: .08em; background: var(--espresso); color: var(--crema); border-radius: 999px; padding: 5px 10px; }
+.card ul { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 2px; }
+.card li { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 2px dashed rgba(58,36,25,.35); font: 700 1.08rem var(--display); }
+.card li i { flex: none; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--espresso); background: var(--sw, var(--crema)); }
+.card li em { margin-left: auto; font: 800 .68rem var(--display); font-style: normal; text-transform: uppercase; letter-spacing: .08em; padding: 3px 8px; border-radius: 999px; border: 1.5px solid var(--espresso); }
+.price-note {
+  margin-top: clamp(28px, 4vw, 48px); display: grid; grid-template-columns: 180px 1fr; gap: clamp(18px, 3vw, 36px); align-items: center;
+  background: var(--espresso); color: var(--crema); border-radius: 26px; padding: clamp(16px, 2.4vw, 26px); box-shadow: 6px 6px 0 var(--caramel);
+}
+.price-note img { width: 100%; aspect-ratio: 4/5; -o-object-fit: cover; object-fit: cover; border-radius: 16px; border: 2.5px solid var(--crema); }
+.price-note p { margin: 0 0 10px; max-width: 46ch; }
+.big-note { font: 800 clamp(1.5rem, 3vw, 2.3rem)/1.05 var(--display); letter-spacing: -.03em; }
+.price-note .btn { margin-top: 6px; box-shadow: 4px 4px 0 var(--caramel); }
+
+/* ---------- visit ---------- */
+.visit { padding: clamp(70px, 10vw, 120px) 0; background: var(--caramel); border-top: 2.5px solid var(--espresso); }
+.visit-grid { display: grid; grid-template-columns: 1.3fr .7fr; gap: clamp(24px, 5vw, 64px); align-items: center; }
+.visit-lede { font: 600 1.15rem/1.45 var(--ui); max-width: 40ch; margin: 18px 0 0; }
+.contact { display: grid; grid-template-columns: repeat(2, minmax(0, max-content)); gap: 14px 40px; margin: 26px 0; }
+.contact div { min-width: 0; }
+.contact dt { font: 800 .76rem var(--display); letter-spacing: .12em; text-transform: uppercase; opacity: .75; }
+.contact dd { margin: 4px 0 0; font: 800 clamp(1.5rem, 3.4vw, 2.3rem)/1 var(--display); letter-spacing: -.02em; }
+.select { -moz-user-select: all; user-select: all; -webkit-user-select: all; background: var(--crema); border: 2.5px solid var(--espresso); border-radius: 12px; padding: 4px 10px; display: inline-block; }
+.btns, .socials { display: flex; flex-wrap: wrap; gap: 14px; }
+.socials { margin-top: 16px; }
+.visit-photo { margin: 0; position: relative; justify-self: center; width: min(100%, 340px); transform: rotate(2.5deg); }
+.visit-photo img { width: 100%; aspect-ratio: 9/14; -o-object-fit: cover; object-fit: cover; border-radius: 26px; border: 2.5px solid var(--espresso); box-shadow: 8px 8px 0 var(--espresso); }
+.visit-photo figcaption { position: absolute; left: 14px; bottom: 14px; background: var(--crema); border: 2px solid var(--espresso); border-radius: 999px; padding: 6px 12px; font: 800 .8rem var(--display); }
+
+/* ---------- footer ---------- */
+.footer { background: var(--espresso); color: var(--crema); padding: 0 0 28px; }
+.ticker--wide { max-width: none; border-radius: 0; background: var(--caramel); color: var(--espresso); border-bottom: 2.5px solid var(--espresso); }
+.ticker--wide .ticker-track { font-size: clamp(1rem, 2.4vw, 1.6rem); padding: 16px 0; animation-duration: 40s; }
+.ticker--wide .ticker-track span::before { color: var(--espresso); }
+.foot-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px; padding-top: 28px; }
+.foot-row p { margin: 0; font: 600 .95rem var(--ui); opacity: .85; }
+.brand--foot { background: transparent; color: var(--crema); border-color: var(--crema); box-shadow: 4px 4px 0 var(--caramel); }
+.brand--foot img { width: 38px; height: 38px; border-radius: 50%; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 960px) {
+  .cards { grid-template-columns: 1fr; }
+  .visit-grid { grid-template-columns: 1fr; }
+  .visit-photo { width: min(100%, 300px); }
+}
+@media (max-width: 760px) {
+  .nav { padding: 12px var(--gut); }
+  .cta--nav { display: none; }
+  .burger { display: grid; }
+  .navlinks {
+    position: absolute; top: calc(100% - 2px); left: var(--gut); right: var(--gut);
+    flex-direction: column; gap: 4px; padding: 10px; border-radius: 26px; border: 2.5px solid var(--espresso); box-shadow: 6px 6px 0 var(--caramel);
+    opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .2s, transform .2s, visibility 0s .2s;
+  }
+  .nav.open .navlinks { opacity: 1; visibility: visible; transform: none; transition: opacity .2s, transform .2s; }
+  .navlinks a:not(.cta) { font-size: 1.3rem; padding: 14px 18px; }
+  .cta--panel { display: flex; margin-top: 6px; box-shadow: 4px 4px 0 var(--crema); border-color: var(--crema); }
+  .brand { font-size: 1.15rem; }
+  .brand svg { width: 32px; height: 32px; }
+  .big { top: 42%; }
+  .hero-media { top: 47%; }
+  .tap3d { top: calc(47% + var(--hs, 60vw) * .3); }
+  .show-media { left: 0; right: 0; top: 19%; bottom: 31%; }
+  .drag-hint { display: none; }
+  .foot { bottom: 18px; }
+  .foot p { font-size: .98rem; }
+  .ticker { flex-basis: 100%; }
+  .show-name { top: 78px; font-size: clamp(2.8rem, 15vw, 5rem); }
+  .show-l2 { -webkit-text-stroke-width: 4px; }
+  .show-card { left: 12px; right: 12px; max-width: none; bottom: 78px; padding: 14px 16px 16px; border-radius: 18px; box-shadow: 4px 4px 0 var(--espresso); }
+  .show-title { font-size: 1.3rem; }
+  .show-desc { font-size: .94rem; }
+  .pair { margin-top: 10px !important; font-size: .92rem; }
+  .show-dots { left: 12px; right: 12px; bottom: 18px; justify-content: center; }
+  .show-dots button { width: 40px; height: 40px; }
+  .show-scroll { display: none; }
+  .price-note { grid-template-columns: 1fr; }
+  .price-note img { aspect-ratio: 16/10; }
+  .contact { grid-template-columns: 1fr; }
+}
+@media (max-height: 640px) and (max-width: 760px) {
+  .show-desc { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+  <script type="module" crossorigin src="/starlaban/assets/c-CRA7viX5.js"></script>
+  <link rel="modulepreload" crossorigin href="/starlaban/assets/perf-_QPaBiv0.js">
+  <link rel="modulepreload" crossorigin href="/starlaban/assets/motion-CUhcBZFa.js">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="Starlaban Coffee, back to top">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#3a2419"/><circle cx="20" cy="20" r="15.5" fill="none" stroke="#c99667" stroke-width="1.2"/><path fill="#f7dfc5" d="M20 9l3 7.3 7.9.6-6 5.1 1.9 7.7L20 25.6l-6.8 4.1 1.9-7.7-6-5.1 7.9-.6z"/></svg>
+    <span>Starlaban</span>
+  </a>
+  <nav class="navlinks" id="navlinks" aria-label="Main">
+    <a href="#showcase" data-sec="showcase">Donuts</a>
+    <a href="#menu" data-sec="menu">Menu</a>
+    <a href="#visit" data-sec="visit">Visit</a>
+    <a class="cta cta--panel" data-link="whatsappLink" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+  </nav>
+  <a class="cta cta--nav" data-link="whatsappLink" href="#" target="_blank" rel="noopener">Order now</a>
+  <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks"><i></i></button>
+</header>
+
+<main id="main">
+  <!-- HERO -->
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <h1 class="big" id="hero-title"><span class="l1">Home of</span> <span class="l2">donuts</span></h1>
+    <div class="hero-media" id="heroMedia" aria-hidden="true">
+      <picture class="hero-poster" id="heroPoster">
+        <source type="image/webp" srcset="/starlaban/posters/c-hero-800.webp 800w, /starlaban/posters/c-hero-1600.webp 1600w" sizes="(max-width: 760px) 66vw, 66vh">
+        <img src="/starlaban/posters/c-hero-800.jpg" alt="" width="800" height="800" fetchpriority="high" decoding="async">
+      </picture>
+    </div>
+    <div class="gl-host" id="heroHost"></div>
+    <button class="tap3d" type="button" hidden>Tap to play in 3D</button>
+    <p class="drag-hint" aria-hidden="true"><span>↔</span> Drag the donut</p>
+    <div class="foot">
+      <p>Glazed, sprinkled, drizzled. Fresh donuts and good coffee in Mogadishu.</p>
+      <div class="ticker" aria-hidden="true"><div class="ticker-track" data-ticker="hero"></div></div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE -->
+  <section class="showcase" id="showcase" aria-labelledby="show-title">
+    <h2 class="sr-only" id="show-title">Five donuts, five drinks</h2>
+    <div class="show-pin" id="showPin">
+      <div class="show-name" aria-hidden="true"><span class="show-l1"></span><span class="show-l2"></span></div>
+      <div class="show-media" id="showMedia" aria-hidden="true">
+        <div class="sm on" data-slug="strawberry">
+          <picture><source type="image/webp" srcset="/starlaban/posters/c-strawberry-800.webp 800w, /starlaban/posters/c-strawberry-1600.webp 1600w" sizes="(max-width: 760px) 100vw, 56vw"><img src="/starlaban/posters/c-strawberry-800.jpg" alt="" width="800" height="500" loading="lazy" decoding="async"></picture>
+        </div>
+        <div class="sm" data-slug="chocolate">
+          <picture><source type="image/webp" srcset="/starlaban/posters/c-chocolate-800.webp 800w, /starlaban/posters/c-chocolate-1600.webp 1600w" sizes="(max-width: 760px) 100vw, 56vw"><img src="/starlaban/posters/c-chocolate-800.jpg" alt="" width="800" height="500" loading="lazy" decoding="async"></picture>
+        </div>
+        <div class="sm" data-slug="ube">
+          <picture><source type="image/webp" srcset="/starlaban/posters/c-ube-800.webp 800w, /starlaban/posters/c-ube-1600.webp 1600w" sizes="(max-width: 760px) 100vw, 56vw"><img src="/starlaban/posters/c-ube-800.jpg" alt="" width="800" height="500" loading="lazy" decoding="async"></picture>
+        </div>
+        <div class="sm" data-slug="caramel">
+          <picture><source type="image/webp" srcset="/starlaban/posters/c-caramel-800.webp 800w, /starlaban/posters/c-caramel-1600.webp 1600w" sizes="(max-width: 760px) 100vw, 56vw"><img src="/starlaban/posters/c-caramel-800.jpg" alt="" width="800" height="500" loading="lazy" decoding="async"></picture>
+        </div>
+        <div class="sm" data-slug="classic">
+          <picture><source type="image/webp" srcset="/starlaban/posters/c-classic-800.webp 800w, /starlaban/posters/c-classic-1600.webp 1600w" sizes="(max-width: 760px) 100vw, 56vw"><img src="/starlaban/posters/c-classic-800.jpg" alt="" width="800" height="500" loading="lazy" decoding="async"></picture>
+        </div>
+      </div>
+      <div class="gl-host" id="stageHost"></div>
+      <div class="show-card" aria-hidden="true">
+        <p class="show-kicker"><span class="show-count">01</span> / <span class="show-total">05</span> · Donut + drink</p>
+        <p class="show-title"></p>
+        <p class="show-desc"></p>
+        <p class="pair"><span class="pair-tag"></span><span class="pair-drink"></span></p>
+      </div>
+      <div class="show-dots" role="group" aria-label="Jump to a donut"></div>
+      <p class="show-scroll" aria-hidden="true">Keep scrolling <span>↓</span></p>
+    </div>
+    <ol class="show-list" id="showList"></ol>
+  </section>
+
+  <!-- MENU -->
+  <section class="menu" id="menu" aria-labelledby="menu-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">What we make</p>
+        <h2 id="menu-title">The menu</h2>
+      </div>
+      <div class="cards" id="menuCards"></div>
+      <div class="price-note">
+        <picture><source type="image/webp" srcset="/starlaban/brand/frame-11.webp"><img src="/starlaban/brand/frame-11.jpg" alt="The Starlaban counter with the menu boards above it" loading="lazy" decoding="async" fetchpriority="low" width="360" height="640"></picture>
+        <div>
+          <p class="big-note">Prices are on the boards in the shop.</p>
+          <p>Ask at the counter, or send us a WhatsApp and we'll tell you what's fresh today.</p>
+          <a class="btn" data-link="whatsappLink" href="#" target="_blank" rel="noopener">Ask on WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIT -->
+  <section class="visit" id="visit" aria-labelledby="visit-title">
+    <div class="wrap visit-grid">
+      <div class="visit-copy">
+        <p class="eyebrow">Come say hi</p>
+        <h2 id="visit-title">Visit, call<br>or message.</h2>
+        <p class="visit-lede">We're in <span data-text="city"></span>. Pop in for a donut, or order ahead and we'll have it ready.</p>
+        <dl class="contact">
+          <div>
+            <dt>WhatsApp</dt>
+            <dd><span class="select" data-text="whatsapp"></span></dd>
+          </div>
+          <div>
+            <dt>Short code</dt>
+            <dd><span class="select" data-text="shortCode"></span></dd>
+          </div>
+        </dl>
+        <div class="btns">
+          <a class="btn btn--wa" data-link="whatsappLink" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+          <a class="btn" data-tel="shortCode" href="#">Call <span data-text="shortCode"></span></a>
+          <a class="btn" data-link="maps" href="#" target="_blank" rel="noopener">Open in Maps</a>
+        </div>
+        <div class="socials">
+          <a class="btn btn--dark" data-link="tiktok" href="#" target="_blank" rel="noopener">TikTok <small><span data-text="tiktokLikes"></span> likes</small></a>
+          <a class="btn btn--dark" data-link="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+      <figure class="visit-photo">
+        <picture><source type="image/webp" srcset="/starlaban/brand/frame-3.webp"><img src="/starlaban/brand/frame-3.jpg" alt="Inside Starlaban: the counter, the bar and window seats" loading="lazy" decoding="async" fetchpriority="low" width="360" height="640"></picture>
+        <figcaption>Inside the shop</figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="ticker ticker--wide" aria-hidden="true"><div class="ticker-track" data-ticker="foot"></div></div>
+  <div class="wrap foot-row">
+    <a class="brand brand--foot" href="#top">
+      <picture><source type="image/webp" srcset="/starlaban/brand/logo.webp"><img src="/starlaban/brand/logo.jpg" alt="" width="44" height="44" loading="lazy" decoding="async"></picture><span>Starlaban Coffee</span>
+    </a>
+    <p>Home of donuts · <span data-text="city"></span></p>
+    <p class="copy">© <span id="year"></span> Starlaban Coffee</p>
+  </div>
+</footer>
+
+</body>
+</html>

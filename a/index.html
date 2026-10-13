@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en" class="is-intro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Starlaban Coffee · Home of donuts, Mogadishu</title>
+<meta name="description" content="Starlaban Coffee in Mogadishu. Espresso pulled to order, iced lattes and fresh donuts. Order on WhatsApp.">
+<meta name="theme-color" content="#120b08">
+<link rel="icon" href="/starlaban/brand/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Fonts never block first paint: load the stylesheet async; size-matched fallbacks avoid a layout jump. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Hanken+Grotesk:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Hanken+Grotesk:wght@400;500;600&display=swap"></noscript>
+<!-- The hero poster (a real render of the final hero frame) is the first thing painted. -->
+<link rel="preload" as="image" type="image/webp" fetchpriority="high" media="(min-aspect-ratio: 85/100)"
+  imagesrcset="/starlaban/posters/a-hero-800.webp 800w, /starlaban/posters/a-hero-1600.webp 1600w" imagesizes="100vw">
+<link rel="preload" as="image" type="image/webp" fetchpriority="high" media="(max-aspect-ratio: 85/100)"
+  imagesrcset="/starlaban/posters/a-hero-portrait-600.webp 600w, /starlaban/posters/a-hero-portrait-1000.webp 1000w" imagesizes="100vw">
+<script>
+  // Hide the page copy until the intro decides what to do. If the module never boots, show everything anyway.
+  document.documentElement.classList.add('js');
+  setTimeout(function () { if (!window.__starA) document.documentElement.classList.remove('is-intro'); }, 4000);
+</script>
+  <script type="module" crossorigin src="/starlaban/assets/a-BsyXDIkx.js"></script>
+  <link rel="modulepreload" crossorigin href="/starlaban/assets/perf-_QPaBiv0.js">
+  <link rel="modulepreload" crossorigin href="/starlaban/assets/motion-CUhcBZFa.js">
+  <link rel="stylesheet" crossorigin href="/starlaban/assets/a-4l2Fsrqj.css">
+</head>
+<body>
+<a class="skiplink" href="#main">Skip to content</a>
+
+<!-- Fixed 3D stage: background glow, the WebGL cup and its labels -->
+<div class="stage-bg" aria-hidden="true"></div>
+<div class="stage" id="stage" role="img" aria-label="A Starlaban paper cup is filled with hot coffee, milk, caramel and cocoa, then the lid goes on.">
+  <!-- Posters are renders of the real scene. They paint first, and stay as the whole experience on the still tier. -->
+  <picture class="poster poster-hero" id="poster-hero">
+    <source media="(max-aspect-ratio: 85/100)" type="image/webp" srcset="/starlaban/posters/a-hero-portrait-600.webp 600w, /starlaban/posters/a-hero-portrait-1000.webp 1000w" sizes="100vw">
+    <source type="image/webp" srcset="/starlaban/posters/a-hero-800.webp 800w, /starlaban/posters/a-hero-1600.webp 1600w" sizes="100vw">
+    <img src="/starlaban/posters/a-hero-1600.jpg" alt="" width="1600" height="900" fetchpriority="high" decoding="async">
+  </picture>
+  <picture class="poster poster-menu" id="poster-hot" data-poster="a-menu-hot">
+    <source media="(max-aspect-ratio: 85/100)" type="image/webp" data-variant="portrait" sizes="100vw">
+    <source type="image/webp" data-variant="landscape" sizes="100vw">
+    <img alt="" width="1600" height="900" decoding="async">
+  </picture>
+  <picture class="poster poster-menu" id="poster-iced" data-poster="a-menu-iced">
+    <source media="(max-aspect-ratio: 85/100)" type="image/webp" data-variant="portrait" sizes="100vw">
+    <source type="image/webp" data-variant="landscape" sizes="100vw">
+    <img alt="" width="1600" height="900" decoding="async">
+  </picture>
+  <!-- Video tier: the same intro, pre-recorded from the live scene. Sources are chosen by script. -->
+  <!-- Menu posters get their URLs from script (with the site base), so the live tiers never download them. -->
+  <video class="intro-clip" id="intro-clip" muted playsinline preload="none" aria-hidden="true"></video>
+  <canvas id="cup-canvas"></canvas>
+</div>
+<div class="intro-loader" id="intro-loader" role="status">
+  <div class="loader-badge"><img src="/starlaban/brand/logo.webp" alt="" width="96" height="96"><i aria-hidden="true"></i></div>
+  <span class="sr-only">Loading Starlaban Coffee</span>
+</div>
+<button class="play3d" id="play3d" type="button" hidden>Play the intro</button>
+<div class="stage-ui" aria-hidden="true">
+  <div class="addon" id="addon"><i></i><span class="addon-n">01</span><span class="addon-t">Hot coffee</span></div>
+</div>
+<div class="vignette" aria-hidden="true"></div>
+<button class="skip" id="skip" type="button">Skip intro</button>
+
+<header class="nav" id="nav">
+  <nav class="nav-inner" aria-label="Main">
+    <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mnav"><i></i></button>
+    <ul class="navlinks left">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#donuts">Donuts</a></li>
+      <li><a href="#story">Story</a></li>
+    </ul>
+    <a class="brand" href="#top" aria-label="Starlaban Coffee, back to top">
+      <span class="brand-word">Starlaban</span>
+      <small>★ COFFEE ★</small>
+    </a>
+    <div class="right">
+      <ul class="navlinks"><li><a href="#visit">Visit</a></li></ul>
+      <a class="order" data-href="whatsappLink" href="#visit" target="_blank" rel="noopener">Order on WhatsApp</a>
+    </div>
+  </nav>
+</header>
+
+<div class="mnav" id="mnav" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+  <button class="mnav-close" id="mnav-close" type="button" aria-label="Close menu"><i></i></button>
+  <ul>
+    <li><a href="#menu"><span>01</span>Menu</a></li>
+    <li><a href="#donuts"><span>02</span>Donuts</a></li>
+    <li><a href="#story"><span>03</span>Story</a></li>
+    <li><a href="#visit"><span>04</span>Visit</a></li>
+  </ul>
+  <a class="order big" data-href="whatsappLink" href="#visit" target="_blank" rel="noopener">Order on WhatsApp</a>
+  <p class="mnav-foot"><span data-text="city">Mogadishu</span> · Short code <b data-text="shortCode"></b></p>
+</div>
+
+<main id="main">
+  <!-- 01 Hero -->
+  <section class="hero" id="top" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow reveal"><span data-text="city">Mogadishu</span> · <span data-text="tagline">Home of donuts</span></p>
+      <h1 id="hero-title" class="hero-title">
+        <span class="w"><span>Coffee,</span></span><br>
+        <span class="w"><em>slowly</em></span> <span class="w"><span>made.</span></span>
+      </h1>
+      <p class="lede reveal">Pulled to order on the bar, with a fresh donut on the side.</p>
+      <div class="cta-row reveal">
+        <a class="btn solid" data-href="whatsappLink" href="#visit" target="_blank" rel="noopener">Order on WhatsApp</a>
+        <a class="btn ghost" href="#menu">See the menu</a>
+      </div>
+    </div>
+    <div class="hero-meta reveal" aria-hidden="true"><span>Scroll</span><b>01 / 05</b></div>
+  </section>
+
+  <!-- 02 Menu -->
+  <section class="menu" id="menu" aria-labelledby="menu-title">
+    <div class="menu-panel">
+      <p class="eyebrow">02 · The bar</p>
+      <h2 id="menu-title" class="h2">The coffee <em>list</em></h2>
+      <p class="sub">Hot or over ice. Every shot is pulled when you order it.</p>
+      <figure class="latte-shot">
+        <picture>
+          <source type="image/webp" srcset="/starlaban/posters/a-latte-600.webp 600w, /starlaban/posters/a-latte-1000.webp 1000w" sizes="(max-width: 860px) 80vw, 240px">
+          <img src="/starlaban/posters/a-latte-600.webp" alt="Latte art of the Starlaban mark: a milk coffee bean with a caramel star, ringed with cocoa" width="1000" height="1000" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>Our mark, poured in milk, caramel and cocoa.</figcaption>
+      </figure>
+      <ol class="rows" id="rows"></ol>
+      <p class="more"><span>Also on the counter</span> <b id="more"></b></p>
+      <p class="note">Prices are on the boards in the shop.</p>
+    </div>
+  </section>
+
+  <!-- 03 Donuts -->
+  <section class="donuts" id="donuts" aria-labelledby="donuts-title">
+    <div class="wrap donuts-grid">
+      <div class="donuts-copy">
+        <p class="eyebrow">03 · Home of donuts</p>
+        <h2 id="donuts-title" class="h2">Donuts, made for <em>the cup</em></h2>
+        <p class="sub">Glazed, dipped and sprinkled. Pick one from the case and have it with your coffee, or take a box home.</p>
+        <ul class="donut-list" id="donut-list"></ul>
+        <div class="cta-row">
+          <a class="btn solid" data-href="whatsappLink" href="#visit" target="_blank" rel="noopener">Order a box on WhatsApp</a>
+          <a class="btn ghost" data-href="tiktok" href="#visit" target="_blank" rel="noopener">See them on TikTok</a>
+        </div>
+      </div>
+      <figure class="donuts-photo">
+        <picture><source type="image/webp" srcset="/starlaban/brand/poster.webp"><img src="/starlaban/brand/poster.jpg" alt="The Starlaban counter with the Home of Donut menu board and the cake case" loading="lazy" width="720" height="1280"></picture>
+        <figcaption>The boards above the bar</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 04 Story -->
+  <section class="story" id="story" aria-labelledby="story-title">
+    <div class="wrap">
+      <div class="story-head">
+        <p class="eyebrow">04 · The room</p>
+        <h2 id="story-title" class="h2">A room built for <em>staying</em></h2>
+      </div>
+      <div class="gallery">
+        <figure class="g g1" data-speed="-6">
+          <div class="g-img"><picture><source type="image/webp" srcset="/starlaban/brand/frame-3.webp"><img src="/starlaban/brand/frame-3.jpg" alt="Black steel trusses and hanging plants over the long wooden bar table" loading="lazy" width="576" height="1024"></picture></div>
+          <figcaption><b>The ceiling</b>Black steel trusses, warm lights and green trailing from the beams.</figcaption>
+        </figure>
+        <figure class="g g2" data-speed="10">
+          <div class="g-img"><picture><source type="image/webp" srcset="/starlaban/brand/frame-11.webp"><img src="/starlaban/brand/frame-11.jpg" alt="The Starlaban sign above the counter, the menu boards and the till" loading="lazy" width="576" height="1024"></picture></div>
+          <figcaption><b>The bar</b>Our name in lights over the counter, and the boards where the day's donuts are listed.</figcaption>
+        </figure>
+        <figure class="g g3" data-speed="-2">
+          <div class="g-img"><picture><source type="image/webp" srcset="/starlaban/brand/frame-8.webp"><img src="/starlaban/brand/frame-8.jpg" alt="Terracotta walls, soft chairs and a black truss ceiling with hanging plants" loading="lazy" width="576" height="1024"></picture></div>
+          <figcaption><b>The walls</b>Terracotta, cream and soft chairs. A calm corner in a busy city.</figcaption>
+        </figure>
+        <figure class="g g4" data-speed="8">
+          <div class="g-img"><picture><source type="image/webp" srcset="/starlaban/brand/frame-13.webp"><img src="/starlaban/brand/frame-13.jpg" alt="The white counter with its slatted wood front and the espresso station" loading="lazy" width="576" height="1024"></picture></div>
+          <figcaption><b>The counter</b>White top, slatted wood front, and the espresso machine within reach.</figcaption>
+        </figure>
+      </div>
+      <div class="story-copy">
+        <p>Starlaban is a coffee bar first. Espresso is pulled to order, milk is steamed for each cup, and the donuts sit in the case where you can see them.</p>
+        <p>Come for a quick cup at the counter, or take a chair under the steel and stay a while.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 Visit -->
+  <section class="visit" id="visit" aria-labelledby="visit-title">
+    <div class="wrap">
+      <p class="eyebrow">05 · Visit</p>
+      <h2 id="visit-title" class="h2">Come in, or <em>order ahead</em></h2>
+      <div class="visit-grid">
+        <div class="card wa">
+          <span class="label">WhatsApp</span>
+          <p class="num" data-text="whatsapp"></p>
+          <a class="btn solid" data-href="whatsappLink" href="#visit" target="_blank" rel="noopener">Message us on WhatsApp</a>
+        </div>
+        <div class="card">
+          <span class="label">Short code</span>
+          <p class="num" data-text="shortCode"></p>
+          <p class="small">Our short code in <span data-text="city">Mogadishu</span>.</p>
+        </div>
+        <div class="card">
+          <span class="label">Find us</span>
+          <p class="place">Starlaban Coffee<br><span data-text="city">Mogadishu</span></p>
+          <a class="btn ghost" data-href="maps" href="#visit" target="_blank" rel="noopener">Open in Maps</a>
+        </div>
+        <div class="card follow">
+          <span class="label">Follow</span>
+          <p class="stat"><b data-text="tiktokLikes"></b> likes on TikTok</p>
+          <ul class="social">
+            <li><a data-href="tiktok" href="#visit" target="_blank" rel="noopener">TikTok <span aria-hidden="true">↗</span></a></li>
+            <li><a data-href="instagram" href="#visit" target="_blank" rel="noopener">Instagram <span aria-hidden="true">↗</span></a></li>
+          </ul>
+        </div>
+        <figure class="card reel">
+          <video id="reel" poster="/starlaban/brand/frame-17.webp" muted loop playsinline preload="none" aria-label="A short walk through the shop">
+            <source src="/starlaban/brand/shop-loop.av1.webm" type="video/webm; codecs=av01.0.05M.08">
+            <source src="/starlaban/brand/shop-loop.h264.mp4" type="video/mp4">
+          </video>
+          <figcaption>Inside the shop</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <a class="brand" href="#top" aria-label="Starlaban Coffee, back to top"><span class="brand-word">Starlaban</span><small>★ COFFEE ★</small></a>
+    <p><span data-text="tagline">Home of donuts</span> · <span data-text="city">Mogadishu</span></p>
+    <ul class="foot-links">
+      <li><a data-href="whatsappLink" href="#visit" target="_blank" rel="noopener">WhatsApp</a></li>
+      <li><a data-href="tiktok" href="#visit" target="_blank" rel="noopener">TikTok</a></li>
+      <li><a data-href="instagram" href="#visit" target="_blank" rel="noopener">Instagram</a></li>
+      <li><a data-href="maps" href="#visit" target="_blank" rel="noopener">Maps</a></li>
+    </ul>
+    <p class="copy">© <span id="year">2026</span> Starlaban Coffee</p>
+  </div>
+</footer>
+
+<div class="grain" aria-hidden="true"></div>
+</body>
+</html>
