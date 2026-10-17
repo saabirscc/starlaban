@@ -678,6 +678,10 @@ label.lb{display:block;font-size:12px;font-weight:800;margin-bottom:8px;color:va
 .wcard .sub{display:block;line-height:16px}
 .onb .otop,.onb .ctl{transform:translateZ(0);will-change:transform;z-index:6}
 
+/* Pay tab: its raised button sits above the bar, so the tab must not clip it, and it gets no ripple box */
+.tb.center{overflow:visible;background:none}
+.tb.center>.rpw{display:none}
+.tb.center .c{position:relative;z-index:2}
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1b1512">
