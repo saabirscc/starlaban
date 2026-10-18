@@ -1571,12 +1571,12 @@ function autoReloadCheck(){
 const LIVE_DEFAULT_URL = 'https://starlaban-payments.starlaban-payments.workers.dev';
 // The payment server is public HTTPS (Cloudflare Worker), so live mode works on GitHub Pages and in the phone app.
 const liveAvailable = true;
-const liveCfg = () => Object.assign({on:false, url:LIVE_DEFAULT_URL, key:''}, st.live || {});
+const liveCfg = () => Object.assign({on:false, url:LIVE_DEFAULT_URL, key:'', phone:'631111111'}, st.live || {});
 function liveRow(){
   if (!liveAvailable) return '';
   const L = liveCfg();
-  return '<div class="li" style="flex-wrap:wrap;padding-top:12px;padding-bottom:12px"><span class="qi" style="background:#fdeee6;color:var(--bad)">' + ic('card') + '</span><span class="grow">Live payments (test)<span class="small muted" style="display:block;font-weight:500">' + (L.on ? 'ON via Sifalo Pay (staging). Set your phone to test number 631111111 to approve' : 'Off: payments are a demo') + '</span></span><button class="toggle" role="switch" aria-checked="' + L.on + '" aria-label="Live payments" data-act="liveToggle"></button>' +
-    (L.on ? '<div style="flex-basis:100%;display:grid;gap:8px;margin-top:10px"><label class="lb" for="liveUrl" style="margin:0">Payment server</label><input id="liveUrl" class="field" inputmode="url" autocomplete="off" value="' + esc(L.url) + '"><label class="lb" for="liveKey" style="margin:4px 0 0">App key (if set on the server)</label><input id="liveKey" class="field" autocomplete="off" value="' + esc(L.key) + '"><button class="btn sm out" data-act="liveCheck">Test connection</button></div>' : '') + '</div>';
+  return '<div class="li" style="flex-wrap:wrap;padding-top:12px;padding-bottom:12px"><span class="qi" style="background:#fdeee6;color:var(--bad)">' + ic('card') + '</span><span class="grow">Live payments (test)<span class="small muted" style="display:block;font-weight:500">' + (L.on ? 'ON: payments go through Sifalo Pay (test mode)' : 'Off: payments are a demo') + '</span></span><button class="toggle" role="switch" aria-checked="' + L.on + '" aria-label="Live payments" data-act="liveToggle"></button>' +
+    (L.on ? '<div style="flex-basis:100%;display:grid;gap:8px;margin-top:10px"><label class="lb" for="livePhone" style="margin:0">Pay from number</label><input id="livePhone" class="field" inputmode="tel" autocomplete="off" value="' + esc(L.phone) + '"><span class="small muted" style="margin-top:-2px">Test numbers: 631111111 approved · 632222222 failed · 634444444 no balance</span><label class="lb" for="liveUrl" style="margin:4px 0 0">Payment server</label><input id="liveUrl" class="field" inputmode="url" autocomplete="off" value="' + esc(L.url) + '"><label class="lb" for="liveKey" style="margin:4px 0 0">App key (if set on the server)</label><input id="liveKey" class="field" autocomplete="off" value="' + esc(L.key) + '"><button class="btn sm out" data-act="liveCheck">Test connection</button></div>' : '') + '</div>';
 }
 async function liveFetch(path, opts){
   const L = liveCfg();
@@ -1588,6 +1588,7 @@ async function liveFetch(path, opts){
 function liveApprove(m, amt, onDone){
   openSheet('approve', {m, amt});
   const tag = $('#sheetInner .demo-tag'); if (tag) { tag.textContent = 'Live test · Sifalo staging'; tag.style.background = '#fdeee6'; tag.style.color = 'var(--bad)'; }
+  const sub = $('#sheetInner .sheet-sub, #sheetInner p.muted'); if (sub && /\+252/.test(sub.textContent)) sub.textContent = 'We sent a request to ' + (liveCfg().phone || st.phone);
   const dial = $('#sheetInner .ussd .dial'); if (dial) dial.textContent = MM[m].n + ' · Sifalo Pay · $' + amt.toFixed(2);
   const u1 = () => $('#u1');
   const say = (txt, spin) => { const e = u1(); if (e) e.innerHTML = (spin ? '<span class="spinner"></span>' : '') + esc(txt); };
@@ -1595,7 +1596,7 @@ function liveApprove(m, amt, onDone){
   let stopped = false; T.push(setTimeout(() => {}, 0)); const stop = () => { stopped = true; };
   T.stop = stop;
   say('Sending request to Sifalo Pay…', true);
-  liveFetch('/api/pay', {method:'POST', body: JSON.stringify({phone: st.phone, amount: amt, wallet: m})}).then(r => {
+  liveFetch('/api/pay', {method:'POST', body: JSON.stringify({phone: liveCfg().phone || st.phone, amount: amt, wallet: m})}).then(r => {
     say('Check your phone and enter your ' + MM[m].n + ' PIN', true);
     const b = $('#ubox'); if (b) b.classList.add('on');
     const t0 = Date.now();
@@ -1764,7 +1765,7 @@ app.addEventListener('input', e => {
     const g = $('#topGet span'); if (g) g.innerHTML = t('youGet', {n:money(amt + b)}) + (b ? ' <span style="color:var(--ok)">(' + t('bonusTag', {n:money(b)}) + ')</span>' : '');
     const btn = $('#topBtn'); if (btn) { btn.disabled = !(amt >= 1); btn.textContent = t('topup') + ' ' + money(amt); }
   }
-  else if (id === 'liveUrl' || id === 'liveKey') { st.live = liveCfg(); st.live[id === 'liveUrl' ? 'url' : 'key'] = e.target.value.trim(); save(); }
+  else if (id === 'liveUrl' || id === 'liveKey' || id === 'livePhone') { st.live = liveCfg(); st.live[{liveUrl:'url', liveKey:'key', livePhone:'phone'}[id]] = e.target.value.trim(); save(); }
   else if (id === 'gphone') { const d = e.target.value.replace(/\D/g, '').slice(0, 9); ui.gift.phone = d; e.target.value = phoneFmt(d); }
   else if (id === 'gmsg') { ui.gift.msg = e.target.value; const g = $('#giftPrevMsg'); if (g) g.textContent = e.target.value || t('msgPh'); }
 });
