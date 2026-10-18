@@ -1166,7 +1166,7 @@ function vAccount(){
   h += '<div class="card prof"><span class="av">' + ic('user') + '</span><div class="grow"><b style="font-size:18px;font-variant-numeric:tabular-nums;color:#fff6ec">' + myPhone() + '</b><div class="small" style="opacity:.75;margin-top:3px">' + t('member') + ' · ' + (lv === 'gold' ? 'Gold Star' : 'Crema') + ' · ★ ' + st.stars + '</div></div></div>';
   h += '<div class="subhd">' + t('wallet') + '</div><div class="card list">' + row('wallet', t('credit'), 'push', 'wallet', '<span class="v">' + money(st.balance) + '</span>') + row('receipt', t('ordersTitle'), 'push', 'orders') + row('gift', t('giftCredit'), 'openGift') + '</div>';
   h += '<div class="subhd">' + t('settings') + '</div><div class="card list"><div class="li" style="flex-wrap:wrap;padding-top:10px;padding-bottom:10px"><span class="qi">' + ic('globe') + '</span><span class="grow" style="flex:1 0 auto">' + t('language') + '</span><div class="seg" style="flex:1 1 180px;max-width:220px" role="group" aria-label="' + t('language') + '"><button aria-pressed="' + (lang === 'en') + '" data-act="lang" data-a="en">English</button><button aria-pressed="' + (lang === 'so') + '" data-act="lang" data-a="so">Soomaali</button></div></div>' +
-    '<div class="li"><span class="qi">' + ic('bell') + '</span><span class="grow">' + t('notifications') + '<span class="small muted" style="display:block;font-weight:500">' + t('notifSub') + '</span></span><button class="toggle" role="switch" aria-checked="' + st.notif + '" aria-label="' + t('notifications') + '" data-act="notif"></button></div></div>';
+    '<div class="li"><span class="qi">' + ic('bell') + '</span><span class="grow">' + t('notifications') + '<span class="small muted" style="display:block;font-weight:500">' + t('notifSub') + '</span></span><button class="toggle" role="switch" aria-checked="' + st.notif + '" aria-label="' + t('notifications') + '" data-act="notif"></button></div>' + liveRow() + '</div>';
   h += '<div class="subhd">' + t('savedPay') + '</div><div class="card list"><div class="li">' + mark('credit') + '<span class="grow">' + t('credit') + '</span><span class="v">' + money(st.balance) + '</span></div>' +
     Object.keys(MM).map(k => '<div class="li">' + mark(k) + '<span class="grow">' + MM[k].n + (st.linked[k] ? '<span class="small muted" style="display:block;font-weight:500">' + myPhone() + '</span>' : '') + '</span>' + (st.linked[k] ? '<span class="pill ok">' + ic('check').replace('<svg', '<svg style="width:14px;height:14px"') + t('linked') + '</span>' : '<button class="btn sm out" data-act="link" data-a="' + k + '">' + t('addMethod') + '</button>') + '</div>').join('') + '</div>';
   h += '<div class="subhd">' + t('help') + '</div><div class="card list"><div class="copyrow"><span class="qi" style="background:#e2f0e4;color:#2f7a48">' + ic('chat') + '</span><div class="grow"><span class="small muted">' + t('whatsapp') + '</span><b style="display:block">+252 61 7794702</b></div><button class="btn sm out" data-act="copy" data-a="+252617794702">' + ic('copy') + '<span>' + t('copy') + '</span></button></div>' +
@@ -1473,7 +1473,7 @@ function renderSheet(){
 }
 function closeSheet(){
   if (!ui.sheet) return;
-  if (ui.approveTimers) { ui.approveTimers.forEach(clearTimeout); ui.approveTimers = null; }
+  if (ui.approveTimers) { if (ui.approveTimers.stop) ui.approveTimers.stop(); ui.approveTimers.forEach(clearTimeout); ui.approveTimers = null; }
   ui.sheet = null; $('#sheetwrap').classList.remove('open');
   if (lastFocus && lastFocus.isConnected) lastFocus.focus({preventScroll:true});
 }
@@ -1566,7 +1566,54 @@ function placeOrder(method, paidCredit, paidOther){
 function autoReloadCheck(){
   if (st.autoReload && st.balance < 5) { st.balance = r2(st.balance + 20); st.txns.unshift({id:'t' + Date.now() + 'r', at: Date.now(), k:'reload', amt:20}); setTimeout(() => toast(t('reloaded'), 'refresh'), 2600); }
 }
+
+/* ================= Live payments (test): real charges via payments-server ================= */
+const LIVE_DEFAULT_URL = 'https://starlaban-payments.starlaban-payments.workers.dev';
+// The payment server is public HTTPS (Cloudflare Worker), so live mode works on GitHub Pages and in the phone app.
+const liveAvailable = true;
+const liveCfg = () => Object.assign({on:false, url:LIVE_DEFAULT_URL, key:''}, st.live || {});
+function liveRow(){
+  if (!liveAvailable) return '';
+  const L = liveCfg();
+  return '<div class="li" style="flex-wrap:wrap;padding-top:12px;padding-bottom:12px"><span class="qi" style="background:#fdeee6;color:var(--bad)">' + ic('card') + '</span><span class="grow">Live payments (test)<span class="small muted" style="display:block;font-weight:500">' + (L.on ? 'ON via Sifalo Pay (staging). Set your phone to test number 631111111 to approve' : 'Off: payments are a demo') + '</span></span><button class="toggle" role="switch" aria-checked="' + L.on + '" aria-label="Live payments" data-act="liveToggle"></button>' +
+    (L.on ? '<div style="flex-basis:100%;display:grid;gap:8px;margin-top:10px"><label class="lb" for="liveUrl" style="margin:0">Payment server</label><input id="liveUrl" class="field" inputmode="url" autocomplete="off" value="' + esc(L.url) + '"><label class="lb" for="liveKey" style="margin:4px 0 0">App key (if set on the server)</label><input id="liveKey" class="field" autocomplete="off" value="' + esc(L.key) + '"><button class="btn sm out" data-act="liveCheck">Test connection</button></div>' : '') + '</div>';
+}
+async function liveFetch(path, opts){
+  const L = liveCfg();
+  const r = await fetch(L.url.replace(/\/$/, '') + path, Object.assign({headers:{'Content-Type':'application/json', 'X-App-Key': L.key || ''}}, opts || {}));
+  let j = {}; try { j = await r.json(); } catch(e){}
+  if (!r.ok) throw new Error(j.error || ('Server error ' + r.status));
+  return j;
+}
+function liveApprove(m, amt, onDone){
+  openSheet('approve', {m, amt});
+  const tag = $('#sheetInner .demo-tag'); if (tag) { tag.textContent = 'Live test · Sifalo staging'; tag.style.background = '#fdeee6'; tag.style.color = 'var(--bad)'; }
+  const dial = $('#sheetInner .ussd .dial'); if (dial) dial.textContent = MM[m].n + ' · Sifalo Pay · $' + amt.toFixed(2);
+  const u1 = () => $('#u1');
+  const say = (txt, spin) => { const e = u1(); if (e) e.innerHTML = (spin ? '<span class="spinner"></span>' : '') + esc(txt); };
+  const T = []; ui.approveTimers = T;
+  let stopped = false; T.push(setTimeout(() => {}, 0)); const stop = () => { stopped = true; };
+  T.stop = stop;
+  say('Sending request to Sifalo Pay…', true);
+  liveFetch('/api/pay', {method:'POST', body: JSON.stringify({phone: st.phone, amount: amt, wallet: m})}).then(r => {
+    say('Check your phone and enter your ' + MM[m].n + ' PIN', true);
+    const b = $('#ubox'); if (b) b.classList.add('on');
+    const t0 = Date.now();
+    const poll = () => {
+      if (stopped || !ui.sheet || ui.sheet.type !== 'approve') return;
+      liveFetch('/api/pay/' + r.uuid).then(s => {
+        if (stopped || !ui.sheet || ui.sheet.type !== 'approve') return;
+        if (s.state === 'paid') { $$('#ubox .pin i').forEach(i => i.classList.add('f')); const ok = $('#uok'); if (ok) ok.classList.add('on'); buzz(); T.push(setTimeout(() => { ui.approveTimers = null; onDone(); }, 1200)); return; }
+        if (s.state === 'failed') { say('Not paid: ' + (s.message || 'payment failed'), false); return; }
+        say(s.message || 'Waiting for approval…', true);
+        T.push(setTimeout(poll, 2500));
+      }).catch(e => { if (Date.now() - t0 < 200000) T.push(setTimeout(poll, 4000)); else say('Lost contact with the payment server', false); });
+    };
+    T.push(setTimeout(poll, 2500));
+  }).catch(e => say('Could not start payment: ' + e.message, false));
+}
 function startApprove(m, amt, onDone){
+  if (liveAvailable && liveCfg().on) return liveApprove(m, amt, onDone);
   openSheet('approve', {m, amt});
   const T = [];
   const q = (ms, fn) => T.push(setTimeout(fn, RM ? Math.min(ms, 300) : ms));
@@ -1684,6 +1731,8 @@ const ACTS = {
   askReset: () => openSheet('reset'),
   doReset: () => { try { localStorage.removeItem(KEY); } catch(e){} closeSheet(); popAll(); st = seed(); ui.tab = 'home'; ui.counts = {}; ui.fills = {}; ui.menuReady = false; ui.menuTimer = null; ui.onb = {step:'cards', phone:'', i:0}; render(); showOnb(); },
   closeSheet: () => closeSheet(),
+  liveToggle: () => { st.live = liveCfg(); st.live.on = !st.live.on; render(); },
+  liveCheck: () => { liveFetch('/api/gateways').then(j => toast('Connected · ' + (j.gateways || []).map(g => g.name).join(', '), 'check')).catch(e => toast('No connection: ' + e.message, 'close')); },
   noop: () => {},
 };
 
@@ -1715,6 +1764,7 @@ app.addEventListener('input', e => {
     const g = $('#topGet span'); if (g) g.innerHTML = t('youGet', {n:money(amt + b)}) + (b ? ' <span style="color:var(--ok)">(' + t('bonusTag', {n:money(b)}) + ')</span>' : '');
     const btn = $('#topBtn'); if (btn) { btn.disabled = !(amt >= 1); btn.textContent = t('topup') + ' ' + money(amt); }
   }
+  else if (id === 'liveUrl' || id === 'liveKey') { st.live = liveCfg(); st.live[id === 'liveUrl' ? 'url' : 'key'] = e.target.value.trim(); save(); }
   else if (id === 'gphone') { const d = e.target.value.replace(/\D/g, '').slice(0, 9); ui.gift.phone = d; e.target.value = phoneFmt(d); }
   else if (id === 'gmsg') { ui.gift.msg = e.target.value; const g = $('#giftPrevMsg'); if (g) g.textContent = e.target.value || t('msgPh'); }
 });
